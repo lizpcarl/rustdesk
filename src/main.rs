@@ -1,6 +1,6 @@
 // Specify the Windows subsystem to eliminate console window.
 // Requires Rust 1.18.
-//#![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 use hbb_common::log;
 use rustdesk::*;
@@ -103,6 +103,12 @@ fn main() {
                 ipc::set_password(args[1].to_owned()).unwrap();
             }
             return;
+        } else if args[0] == "--play" {//"rustdesk://meshinfo/desk?id=1277363449&pass=8n6tyn"
+            if args.len() < 2 {
+                log::error!("not error, only for test for args.len() < 2");
+            }
+            log::info!("--play write the args {:?}", args);
+            args.push(String::from("ready_for_password"));
         }
     }
     ui::start(&mut args[..]);

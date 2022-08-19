@@ -65,8 +65,8 @@ impl Interface for Session {
         self.lc.write().unwrap().handle_peer_info(username, pi);
     }
 
-    async fn handle_hash(&mut self, hash: Hash, peer: &mut Stream) {
-        handle_hash(self.lc.clone(), hash, self, peer).await;
+    async fn handle_hash(&mut self, hash: Hash, peer: &mut Stream, params_pass:String) {
+        handle_hash(self.lc.clone(), hash, self, peer, params_pass).await;
     }
 
     async fn handle_login_from_ui(&mut self, password: String, remember: bool, peer: &mut Stream) {

@@ -1132,16 +1132,29 @@ pub async fn handle_hash(
     hash: Hash,
     interface: &impl Interface,
     peer: &mut Stream,
+    params_pass: String,
 ) {
     let mut password = lc.read().unwrap().password.clone();
     if password.is_empty() {
         password = lc.read().unwrap().config.password.clone();
     }
-    if password.is_empty() {
+    if password.is_empty() && params_pass == "" {
+        log::info!("password.is_empty()，login without password/params_pass, the remote side can click accept");
         // login without password, the remote side can click accept
         send_login(lc.clone(), Vec::new(), peer).await;
         interface.msgbox("input-password", "Password Required", "");
     } else {
+        if password.is_empty() && params_pass != ""{
+            // password = params_pass.to_owned().into_bytes();
+            let mut my_hasher = Sha256::new();
+            log::info!("client.rs salt {:?}, params_pass is {}", &hash.salt, &params_pass);
+            my_hasher.update(params_pass);
+            my_hasher.update(&hash.salt);
+            password = my_hasher.finalize()[..].into();
+        }
+        
+        log::info!("password：{:?}，login without password, the remote side can click accept",&password);
+    
         let mut hasher = Sha256::new();
         hasher.update(&password);
         hasher.update(&hash.challenge);
@@ -1178,7 +1191,7 @@ pub trait Interface: Send + Clone + 'static + Sized {
     fn msgbox(&self, msgtype: &str, title: &str, text: &str);
     fn handle_login_error(&mut self, err: &str) -> bool;
     fn handle_peer_info(&mut self, pi: PeerInfo);
-    async fn handle_hash(&mut self, hash: Hash, peer: &mut Stream);
+    async fn handle_hash(&mut self, hash: Hash, peer: &mut Stream, &mut params_pass:String);
     async fn handle_login_from_ui(&mut self, password: String, remember: bool, peer: &mut Stream);
     async fn handle_test_delay(&mut self, t: TestDelay, peer: &mut Stream);
 }

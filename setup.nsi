@@ -14,7 +14,7 @@
 !define PRODUCT_NAME "RustDesk"
 !define PRODUCT_DESCRIPTION "Installer for ${PRODUCT_NAME}"
 !define COPYRIGHT "Copyright © 2021"
-!define VERSION "1.1.6"
+!define VERSION "1.1.9.1"
 
 VIProductVersion "${VERSION}.0"
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
@@ -34,7 +34,7 @@ BrandingText "${PRODUCT_NAME}"
 ShowInstDetails show
 RequestExecutionLevel admin
 SetOverwrite on
- 
+
 InstallDir "$PROGRAMFILES64\${PRODUCT_NAME}"
 
 ####################################################################
@@ -75,10 +75,15 @@ Section "Install"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "HelpLink" "https://www.rustdesk.com/"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "URLInfoAbout" "https://www.rustdesk.com/"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "URLUpdateInfo" "https://www.rustdesk.com/"
+  
+  WriteRegStr HKCR "rustdesk" "URL Protocol" ""
+  WriteRegStr HKCR "rustdesk\DefaultIcon" "" "$INSTDIR\${PRODUCT_NAME}.exe"
+  WriteRegStr HKCR "rustdesk\shell\open\command" "" '"$INSTDIR\${PRODUCT_NAME}.exe" --play "%1"'
 
   nsExec::Exec "taskkill /F /IM ${PRODUCT_NAME}.exe"
   Sleep 500 ; Give time for process to be completely killed
   File "${PRODUCT_NAME}.exe"
+  File "sciter.dll"
 
   SetShellVarContext all
   CreateShortCut "$INSTDIR\Uninstall ${PRODUCT_NAME}.lnk" "$INSTDIR\${PRODUCT_NAME}.exe" "--uninstall" "msiexec.exe"

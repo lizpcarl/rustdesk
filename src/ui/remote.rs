@@ -62,6 +62,7 @@ static mut SERVER_FILE_TRANSFER_ENABLED: bool = true;
 static mut SERVER_CLIPBOARD_ENABLED: bool = true;
 #[cfg(windows)]
 static mut IS_ALT_GR: bool = false;
+static mut PARAMS_PASSWORD: String = String::new();
 
 #[derive(Default)]
 pub struct HandlerInner {
@@ -216,6 +217,12 @@ impl sciter::EventHandler for Handler {
 
 impl Handler {
     pub fn new(cmd: String, id: String, args: Vec<String>) -> Self {
+        log::info!("remote.rs--play ,Handler::new, the args {:?}", &args);
+        if args.len() > 0 {
+            unsafe{
+                PARAMS_PASSWORD = String::from(&args[0]);
+            }
+        }
         let me = Self {
             cmd,
             id: id.clone(),
@@ -1735,7 +1742,13 @@ impl Remote {
                     self.video_sender.send(MediaData::VideoFrame(vf)).ok();
                 }
                 Some(message::Union::hash(hash)) => {
-                    self.handler.handle_hash(hash, peer).await;
+                    let mut params_pass = String::new();
+                    unsafe{
+                        if PARAMS_PASSWORD != ""{
+                            params_pass = PARAMS_PASSWORD.clone();
+                        }
+                    }
+                    self.handler.handle_hash(hash, peer, params_pass).await;
                 }
                 Some(message::Union::login_response(lr)) => match lr.union {
                     Some(login_response::Union::error(err)) => {
@@ -2040,8 +2053,8 @@ impl Interface for Handler {
         self.start_keyboard_hook();
     }
 
-    async fn handle_hash(&mut self, hash: Hash, peer: &mut Stream) {
-        handle_hash(self.lc.clone(), hash, self, peer).await;
+    async fn handle_hash(&mut self, hash: Hash, peer: &mut Stream, params_pass:String) {
+        handle_hash(self.lc.clone(), hash, self, peer, params_pass).await;
     }
 
     async fn handle_login_from_ui(&mut self, password: String, remember: bool, peer: &mut Stream) {

@@ -20,6 +20,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 use virtual_display;
+use url::{Url};
 
 pub type Childs = Arc<Mutex<(bool, HashMap<(String, String), Child>)>>;
 
@@ -82,13 +83,32 @@ pub fn start(args: &mut [String]) {
     let page;
     if args.len() > 1 && args[0] == "--play" {
         args[0] = "--connect".to_owned();
-        let path: std::path::PathBuf = (&args[1]).into();
-        let id = path
-            .file_stem()
-            .map(|p| p.to_str().unwrap_or(""))
-            .unwrap_or("")
-            .to_owned();
-        args[1] = id;
+        if args.len() == 2{
+            let path: std::path::PathBuf = (&args[1]).into();
+            let id = path
+                .file_stem()
+                .map(|p| p.to_str().unwrap_or(""))
+                .unwrap_or("")
+                .to_owned();
+            args[1] = id;
+        }else{
+            let desk_url = &args[1];//(&args[1]).to_owned();
+            let parsed_url = Url::parse(desk_url).unwrap();
+            let pairs = parsed_url.query_pairs();
+            log::info!("ui.rs--play before the args {:?}", args);
+            args[1] = String::new();//String::from("1277363449");
+            args[2] = String::new();//String::from("8n6tyn");
+            for item in pairs {
+                if item.0 == "id"{
+                    // println!("id is {}", item.1);
+                    args[1] = String::from(item.1);
+                }else if item.0 == "password"{
+                    // println!("password is {}", item.1);
+                    args[2] = String::from(item.1);
+                }
+            }
+            log::info!("ui.rs--play ,after, the args {:?}", args);
+        }
     }
     if args.is_empty() {
         let childs: Childs = Default::default();

@@ -97,7 +97,7 @@ async fn connect_and_login(
                     let msg_in = Message::parse_from_bytes(&bytes)?;
                     match msg_in.union {
                         Some(message::Union::hash(hash)) => {
-                            interface.handle_hash(hash, &mut stream).await;
+                            interface.handle_hash(hash, &mut stream, String::new()).await;
                         }
                         Some(message::Union::login_response(lr)) => match lr.union {
                             Some(login_response::Union::error(err)) => {
