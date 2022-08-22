@@ -50,6 +50,16 @@ href="rustdesk://meshinfo/desk?id=1277363449&password=8n6tyn"
 ------------------------------------
 在MacOS下，使用vcpkg install libvpx时报BUILD_FAIL，主要原因是vcpkg的编译依赖中没有提示缺少pkg-config。使用以下方式安装即可：
 brew install automake pkg-config
+brew install create-dmg
+另外，要安装cargo bundle ,运行cargo install cargo-bundle；
+
+vcpkg使用当前最新的一个备注了mac分支(led3a8935,"Fix cross compiling macOS(#26240)")；
+rustdesk使用Aug16的最新代码，可编译通过。
+
+
+
+------------------------------------
+
 
 
 

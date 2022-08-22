@@ -57,6 +57,19 @@ def main():
             txt = open(plist).read()
             with open(plist, "wt") as fh:
                 fh.write(txt.replace("</dict>", """
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>com.carriez.rustdesk</string>
+        <key>CFBundleURLSchemes</key>
+            <array>
+                <string>rustdesk</string>
+            </array>
+    </dict>
+  </array>
   <key>LSUIElement</key>    
   <string>1</string>    
 </dict>"""))
@@ -71,8 +84,9 @@ def main():
 codesign -s "Developer ID Application: {0}" --force --options runtime  ./target/release/bundle/osx/RustDesk.app/Contents/MacOS/*
 codesign -s "Developer ID Application: {0}" --force --options runtime  ./target/release/bundle/osx/RustDesk.app
 '''.format(pa))
-            os.system('create-dmg target/release/bundle/osx/RustDesk.app')
-            os.rename('RustDesk %s.dmg'%version, 'rustdesk-%s.dmg'%version)
+            # os.system('create-dmg target/release/bundle/osx/RustDesk.app')
+            # os.rename('RustDesk %s.dmg'%version, 'rustdesk-%s.dmg'%version)
+            os.system('create-dmg rustdesk-%s.dmg target/release/bundle/osx/RustDesk.ap' % version)
             if pa:
               os.system('''
 #rcodesign sign --p12-file ~/.p12/rustdesk-developer-id.p12 --p12-password-file ~/.p12/.cert-pass --code-signature-flags runtime ./rustdesk-{1}.dmg
