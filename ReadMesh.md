@@ -58,7 +58,7 @@ brew install create-dmg
 
 2. vcpkg使用当前最新的一个备注了mac分支(led3a8935,"Fix cross compiling macOS(#26240)")；
 3. rustdesk使用Aug16的最新代码，可编译通过。
-4. 下载依赖库https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.osx/libsciter.dylib
+4. 下载依赖库[libsciter.dylib](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.osx/libsciter.dylib)，放到项目根目录。
 
 ####打包相关
 1. 使用"python3 build.py"生成RustDesk.app时设置“CFBundleURLSchemes”为“rustdesk”，响应该URL Schema.
