@@ -95,6 +95,7 @@ class Header: Reactor.Component {
         var style = "flow:horizontal;";
         if (is_osx) style += "margin:*";
         self.timer(1ms, toggleMenuState);
+        // <span #action>{svg_action}</span> //move to mask, origin code line 108.
         return <div style={style}>
             {is_osx || is_xfce ? "" : <span #fullscreen>{svg_fullscreen}</span>}
             <div #screens>
@@ -104,7 +105,6 @@ class Header: Reactor.Component {
                 {this.renderGlobalScreens()}
             </div>
             <span #chat>{svg_chat}</span>
-            <span #action>{svg_action}</span>
             <span #display>{svg_display}</span>
             {this.renderDisplayPop()}
             {this.renderActionPop()}

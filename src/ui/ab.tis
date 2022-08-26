@@ -100,11 +100,11 @@ class SessionList: Reactor.Component {
         }
         var me = this;
         sessions = sessions.map(function(x) { return me.getSession(x); });
+                    // <li #transfer>{translate('Transfer File')}</li>  //move to mask at Line 108.
         return <div .recent-sessions-content key={sessions.length}>
             <popup>
                 <menu.context #remote-context>
                     <li #connect>{translate('Connect')}</li>
-                    <li #transfer>{translate('Transfer File')}</li>
                     <li #tunnel>{translate('TCP Tunneling')}</li>
                     <li #rdp>RDP<EditRdpPort /></li>
                     <div .separator />

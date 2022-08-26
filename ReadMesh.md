@@ -48,16 +48,32 @@ href="rustdesk://meshinfo/desk?id=1277363449&password=8n6tyn"
 
 
 ------------------------------------
-在MacOS下，使用vcpkg install libvpx时报BUILD_FAIL，主要原因是vcpkg的编译依赖中没有提示缺少pkg-config。使用以下方式安装即可：
+###Windows版rustdesk远程桌面打包过程
+
+####环境安装问题
+1. 在MacOS下，使用vcpkg install libvpx时报BUILD_FAIL，主要原因是vcpkg的编译依赖中没有提示缺少pkg-config。使用以下方式安装即可：
 brew install automake pkg-config
 brew install create-dmg
 另外，要安装cargo bundle ,运行cargo install cargo-bundle；
 
-vcpkg使用当前最新的一个备注了mac分支(led3a8935,"Fix cross compiling macOS(#26240)")；
-rustdesk使用Aug16的最新代码，可编译通过。
+2. vcpkg使用当前最新的一个备注了mac分支(led3a8935,"Fix cross compiling macOS(#26240)")；
+3. rustdesk使用Aug16的最新代码，可编译通过。
 
 
-
+####打包相关
+1. 生成RustDesk.app时设置“CFBundleURLSchemes”为“rustdesk”，响应该URL Schema.
+2. 为了传递web端的参数，使用了AppleScript，保存在要目录下，命名为"rustdeskregister.applescript"，判断在"on open"时按参数打开目标设备的远程连接；如果不是web端call起，就默认调用正常的rustdusk。
+3. 将rustdeskregister导出为app应用，导出时选用的“文件格式”为“应用程序”，“选项”中只勾选“仅运行”，“存储”到任意目录。
+4. 选择rustdeskregister.app，右键“显示包内容”，拷贝好以下文件：“Contents/MacOS/applet”、“Contents/Resources/applet.rsrc”、“Contents/Resources/Scripts/main.scpt”；再对RustDesk.app“显示包内容”，粘贴上述3个文件到对应的目录；
+5. 修改RustDesk.app的info.plist，修改启动时的可执行文件为AppleScript的编译文件。
+```
+<key>CFBundleExecutable</key>
+<string>applet</string>
+```
+6. 最后手动打包为dmg安装文件。
+```
+create-dmg --window-pos 150 80 --window-size 640 480 --app-drop-link 320 200 --icon "RustDesk.app" 30 50 --hide-extension "RustDesk.app" rustdesk-mesh1.1.9.dmg target/release/bundle/osx/RustDesk.app
+```
 ------------------------------------
 
 

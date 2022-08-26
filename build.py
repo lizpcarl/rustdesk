@@ -65,13 +65,13 @@ def main():
         <key>CFBundleURLName</key>
         <string>com.carriez.rustdesk</string>
         <key>CFBundleURLSchemes</key>
-            <array>
-                <string>rustdesk</string>
-            </array>
+        <array>
+            <string>rustdesk</string>
+        </array>
     </dict>
   </array>
-  <key>LSUIElement</key>    
-  <string>1</string>    
+  <key>LSUIElement</key>
+  <string>1</string>
 </dict>"""))
             pa = os.environ.get('P')
             if pa:
@@ -86,7 +86,8 @@ codesign -s "Developer ID Application: {0}" --force --options runtime  ./target/
 '''.format(pa))
             # os.system('create-dmg target/release/bundle/osx/RustDesk.app')
             # os.rename('RustDesk %s.dmg'%version, 'rustdesk-%s.dmg'%version)
-            os.system('create-dmg rustdesk-%s.dmg target/release/bundle/osx/RustDesk.ap' % version)
+            os.system('create-dmg --window-pos 150 80 --window-size 640 480 --app-drop-link 320 200 --icon "RustDesk.app" 30 50 --hide-extension "RustDesk.app" rustdesk-%s.dmg target/release/bundle/osx/RustDesk.app'%version)
+            #os.system('create-dmg rustdesk-%s.dmg target/release/bundle/osx/RustDesk.app' % version)
             if pa:
               os.system('''
 #rcodesign sign --p12-file ~/.p12/rustdesk-developer-id.p12 --p12-password-file ~/.p12/.cert-pass --code-signature-flags runtime ./rustdesk-{1}.dmg
