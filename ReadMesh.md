@@ -1,4 +1,4 @@
-###Windows版rustdesk远程桌面打包过程
+##Windows版rustdesk远程桌面打包过程
 
 1. 下载sciter SDK，解压后，复制“sciter-sdk.zip\bin.win\x64\sciter.dll”到编译环境的target的子目录，分别为debug和release这两个目录下；
 
@@ -48,9 +48,9 @@ href="rustdesk://meshinfo/desk?id=1277363449&password=8n6tyn"
 
 
 ------------------------------------
-###Windows版rustdesk远程桌面打包过程
+##Windows版rustdesk远程桌面打包过程
 
-####环境安装问题
+###环境安装问题
 1. 在MacOS下，使用vcpkg install libvpx时报BUILD_FAIL，主要原因是vcpkg的编译依赖中没有提示缺少pkg-config。使用以下方式安装即可：
 brew install automake pkg-config
 brew install create-dmg
@@ -60,7 +60,7 @@ brew install create-dmg
 3. rustdesk使用Aug16的最新代码，可编译通过。
 4. 下载依赖库[libsciter.dylib](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.osx/libsciter.dylib)，放到项目根目录。
 
-####打包相关
+###打包相关
 1. 使用"python3 build.py"生成RustDesk.app时设置“CFBundleURLSchemes”为“rustdesk”，响应该URL Schema.
 2. 为了传递web端的参数，使用了AppleScript，保存在要目录下，命名为"rustdeskregister.applescript"，判断在"on open"时按参数打开目标设备的远程连接；如果不是web端call起，就默认调用正常的rustdusk。
 3. 将rustdeskregister导出为app应用，导出时选用的“文件格式”为“应用程序”，“选项”中只勾选“仅运行”，“存储”到任意目录。
